@@ -136,6 +136,11 @@
     createChart('solanaAreaChart', '#C817F8');
     createChart('litecoinAreaChart', '#2171EA');
     createChart('dogecoinAreaChart', '#C2A633');
+    createChart('AreaChart1', '#F98C08');
+    createChart('AreaChart2', '#5F80FF');
+    createChart('AreaChart3', '#C817F8');
+    createChart('AreaChart4', '#2171EA');
+    createChart('AreaChart5', '#C2A633');
     // ================================== Crm Home widgets charts End =================================
 
     // ================================== CandleStick charts Start =================================

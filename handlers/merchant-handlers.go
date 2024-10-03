@@ -215,7 +215,7 @@ func RegistrationPost(c *fiber.Ctx) error {
 			if err != nil {
 				fmt.Println("issue sending verification email")
 			}
-
+			fmt.Print("Email Error 3")
 			s, _ := store.Get(c)
 
 			loginIp := c.Context().RemoteIP().String()
@@ -234,11 +234,14 @@ func RegistrationPost(c *fiber.Ctx) error {
 				"MerchantLoginIP": loginIp,
 			})
 
+			// check session
+			Alerts = "Your login details have been sent to your registered email. Please check your inbox and complete your profile to enjoy full access to our features. Completing your profile helps us serve you better!"
+			s.Set("Alert", Alerts) // Set a session key
 			if err := s.Save(); err != nil {
-				panic(err)
+				return err
 			}
 
-			return c.Redirect("/")
+			return c.Redirect("/profile")
 
 		}
 	} else {
@@ -969,9 +972,11 @@ func ProfilePost(c *fiber.Ctx) error {
 	getMobile := c.FormValue("mobile")
 	getAddressLine1 := c.FormValue("address_line1")
 	getAddressLine2 := c.FormValue("address_line2")
-
+	fmt.Println("LoginMerchantID $$$$$$$$$$$")
 	s, _ := store.Get(c)
 	LoginMerchantID := s.Get("LoginMerchantID").(uint)
+
+	fmt.Println("LoginMerchantID =>>>>>>>>", LoginMerchantID)
 
 	result := database.DB.Db.Table("client_details").Save(&models.Profile{Client_id: LoginMerchantID, Gender: getGender, BirthDate: getBirthDate, CountryCode: getCountryCode, Mobile: getMobile, AddressLine1: getAddressLine1, AddressLine2: getAddressLine2})
 
