@@ -84,7 +84,7 @@ func main() {
 	// Middleware to set BaseURL globally
 	app.Use(func(c *fiber.Ctx) error {
 		// Set the BaseURL using ctx.Locals
-		//c.Locals("BaseURL", os.Getenv("FileURL"))         // Set File Path
+		c.Locals("CommonURL", os.Getenv("CommonURL"))     // Set CommonURL File Path
 		c.Locals("LogoLight", os.Getenv("LogoLight"))     // Set Logo Path
 		c.Locals("LogoDark", os.Getenv("LogoDark"))       // Set Logo Path
 		c.Locals("FaviconIcon", os.Getenv("FaviconIcon")) // Set FaviconIcon Path
