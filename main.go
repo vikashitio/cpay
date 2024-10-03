@@ -95,7 +95,6 @@ func main() {
 		} else {
 			c.Locals("CssURLS", os.Getenv("FileURL")) // Set Logo Path
 		}
-
 		return c.Next()
 	})
 
