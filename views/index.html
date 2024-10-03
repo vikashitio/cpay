@@ -4,26 +4,17 @@
 
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
 <h6 class="fw-semibold mb-0">{{ .Title }}</h6>
-<!-- <ul class="d-flex align-items-center gap-2">
-  <li class="fw-medium">
-    <a href="/" class="d-flex align-items-center gap-1 hover-text-primary">
-      <iconify-icon icon="solar:home-smile-angle-outline" class="icon text-lg"></iconify-icon>
-      {{ .Title }}
-    </a>
-  </li>
-  <li>-</li>
-  <li class="fw-medium">Cryptocurrency</li>
-</ul> -->
+
 </div>
   
   <!-- Crypto Home Widgets Start -->
   <div class="row row-cols-xxxl-5 row-cols-lg-3 row-cols-sm-2 row-cols-1 gy-4">
-    
+    {{ $snumber := 0 }} <!-- Initialize index variable -->
     {{range .CoinBalanceList}}   
         {{ $dataContext := . }}
           {{if gt .Balance "0"}}
-          
-            <div class="col">
+          {{ $snumber = add $snumber 1 }} <!-- Increment index -->
+                      <div class="col">
                 <div class="card shadow-none border bg-gradient-end-3">
                   {{range index $.CoinList}} {{if eq $dataContext.Assetid .Coin_id}}
                     <div class="card-body p-20">
@@ -39,7 +30,7 @@
                                 <h6 class="mb-8">{{$dataContext.Balance}}  <span class="text-uppercase">{{.Coin}}</span></h6>
                                 <span class="text-success-main text-md">Balance</span> 
                             </div>
-                            <div {{if eq .Coin "usdt"}} id="bitcoinAreaChart"{{else}} id="bitcoinAreaChartcc" {{end}} class="remove-tooltip-title rounded-tooltip-value"></div>
+                            <div id="AreaChart{{ $snumber }}" class="remove-tooltip-title rounded-tooltip-value"></div>
                         </div>
                     </div>
                   {{end}}{{end}}
