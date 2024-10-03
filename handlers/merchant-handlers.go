@@ -688,7 +688,7 @@ func ResetPasswordPost(c *fiber.Ctx) error {
 	}
 
 	receivedId := loginList.Client_id
-	//fmt.Println("XXX ", receivedId)
+	//fmt.Println("XXXc ", receivedId)
 
 	if receivedId > 0 {
 		var password = function.PasswordGenerator(8)

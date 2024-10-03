@@ -141,6 +141,7 @@
     createChart('AreaChart3', '#C817F8');
     createChart('AreaChart4', '#2171EA');
     createChart('AreaChart5', '#C2A633');
+    
     // ================================== Crm Home widgets charts End =================================
 
     // ================================== CandleStick charts Start =================================
