@@ -54,12 +54,17 @@ func GetAdminList(c *fiber.Ctx) error {
 	var total int64
 	database.DB.Db.Table(tableNameA).Order(listOrderByA).Limit(limit).Offset(offset).Find(&adminList).Count(&total)
 
-	//fmt.Println(total)
 	// Prepare pagination data
+	totalPage := total / 10
+	//fmt.Println(totalPage)
 	nextPage := page + 1
 	prevPage := page - 1
 	if page == 1 {
 		prevPage = 0
+	}
+
+	if page >= int(totalPage+1) {
+		nextPage = 0
 	}
 
 	return c.Render(pageNameA, fiber.Map{
