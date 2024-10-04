@@ -98,7 +98,7 @@
                       <div class="tab-pane fade show active" id="pills-edit-profile" role="tabpanel" aria-labelledby="pills-edit-profile-tab" tabindex="0">
                           <h6 class="text-md text-primary-light mb-16">Profile Image</h6>
                           <!-- Upload Image Start -->
-                          <div class="mb-24 mt-16">
+                          <!-- <div class="mb-24 mt-16">
                               <div class="avatar-upload">
                                       <div class="avatar-edit position-absolute bottom-0 end-0 me-24 mt-16 z-1 cursor-pointer">
                                           <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" hidden>
@@ -111,7 +111,7 @@
                                       </div>
                                   </div>
                               </div>
-                          </div>
+                          </div> -->
                           <!-- Upload Image End -->
                           <form method="POST" action="/profilePost" enctype="multipart/form-data" autocomplete="off">
                             {{range .Profile}} 
@@ -128,7 +128,7 @@
                                   </div>
                                   <div class="col-sm-6">
                                       <div class="mb-20">
-                                          <label for="email" class="form-label fw-semibold text-primary-light text-sm mb-8">Birth Date <span class="text-danger-600">*</span></label>
+                                          <label for="birth_date" class="form-label fw-semibold text-primary-light text-sm mb-8">Birth Date <span class="text-danger-600">*</span></label>
                                           <input type="date" id="birth_date" name="birth_date" class="form-control" title="Birth Date" required="" placeholder="Enter Birth Date" value="{{if .BirthDate}}{{.BirthDate}}{{end}}" >
                                       </div>
                                   </div>
@@ -396,22 +396,50 @@
                                           <input type="text" id="mobile" name="mobile" class="form-control radius-8" title="Phone Number" required="" value="{{if .Mobile}}{{.Mobile}}{{end}}">
                                       </div>
                                   </div>
+
                                   <div class="col-sm-6">
                                     <div class="mb-20">
-                                        <label for="mobile" class="form-label fw-semibold text-primary-light text-sm mb-8">Address Line 1 <span class="text-danger-600">*</span> </label>
+                                        <label for="city" class="form-label fw-semibold text-primary-light text-sm mb-8">City <span class="text-danger-600">*</span> </label>
+                                        <input type="text" id="city" name="city" class="form-control radius-8" title="City" required="" value="{{if .City}}{{.City}}{{end}}">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="mb-20">
+                                        <label for="state" class="form-label fw-semibold text-primary-light text-sm mb-8">State <span class="text-danger-600">*</span> </label>
+                                        <input type="text" id="state" name="state" class="form-control radius-8" title="State" required="" value="{{if .State}}{{.State}}{{end}}">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="mb-20">
+                                        <label for="country" class="form-label fw-semibold text-primary-light text-sm mb-8">Country <span class="text-danger-600">*</span> </label>
+                                        <input type="text" id="country" name="country" class="form-control radius-8" title="Country" required="" value="{{if .Country}}{{.Country}}{{end}}">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="mb-20">
+                                        <label for="pincode" class="form-label fw-semibold text-primary-light text-sm mb-8">Pincode <span class="text-danger-600">*</span> </label>
+                                        <input type="text" id="pincode" name="pincode" class="form-control radius-8" title="Pincode" required="" value="{{if .Pincode}}{{.Pincode}}{{end}}">
+                                    </div>
+                                </div>
+                                  <div class="col-sm-6">
+                                    <div class="mb-20">
+                                        <label for="address_line1" class="form-label fw-semibold text-primary-light text-sm mb-8">Address Line 1 <span class="text-danger-600">*</span> </label>
                                         <input type="text" id="address_line1" name="address_line1" class="form-control radius-8" title="Address Line 1" required="" value="{{if .AddressLine1}}{{.AddressLine1}}{{end}}">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                   <div class="mb-20">
-                                      <label for="mobile" class="form-label fw-semibold text-primary-light text-sm mb-8">Address Line 2 <span class="text-danger-600">*</span> </label>
+                                      <label for="address_line2" class="form-label fw-semibold text-primary-light text-sm mb-8">Address Line 2 <span class="text-danger-600">*</span> </label>
                                       <input type="text" id="address_line2" name="address_line2" class="form-control radius-8" title="Address Line 2" required="" value="{{if .AddressLine2}}{{.AddressLine2}}{{end}}">
                                   </div>
                               </div>
                                  
                               </div>
                               {{end}}
-                              <div class="d-flex align-items-center justify-content-center gap-3">
+                              <div class="d-flex align-items-center justify-content-center5 gap-3">
                                  
                                   <button type="submit" class="btn btn-primary border border-primary-600 text-md px-56 py-12 radius-8"> 
                                       Save

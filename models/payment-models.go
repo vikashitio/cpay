@@ -124,28 +124,16 @@ type PayResponse struct {
 
 // Root structure
 type CardanoResponse struct {
-	//PageNo       int                  `json:"pageNo"`
-	//Limit        int                  `json:"limit"`
 	Data []CardanoTransaction `json:"transactions"`
-	//Count        int                  `json:"count"`
 }
 
 // Transaction structure
 type CardanoTransaction struct {
-	Hash string `json:"hash"`
-	//BlockHash   string               `json:"blockHash"`
-	Fees string `json:"fees"`
-	//Slot        int                  `json:"slot"`
-	//Epoch       int                  `json:"epoch"`
-	//BlockHeight int                  `json:"blockHeight"`
-	//AbsSlot     int                  `json:"absSlot"`
-	Timestamp time.Time `json:"timestamp"`
-	//Index       int                  `json:"index"`
-	//Inputs      []CardanoInput       `json:"inputs"`
-	Outputs []CardanoOutput `json:"outputs"`
-	//Certificate []CardanoCertificate `json:"certificate"`
-	Status bool `json:"status"`
-	//TTL         []CardanoTTL         `json:"ttl"`
+	Hash      string          `json:"hash"`
+	Fees      string          `json:"fees"`
+	Timestamp time.Time       `json:"timestamp"`
+	Outputs   []CardanoOutput `json:"outputs"`
+	Status    bool            `json:"status"`
 }
 
 // Input structure
@@ -162,13 +150,34 @@ type CardanoOutput struct {
 	Value   string `json:"value"`
 }
 
-// Certificate structure
-type CardanoCertificate struct {
-	// Add necessary fields if needed (currently empty in the JSON)
-}
-
 // TTL structure
 type CardanoTTL struct {
 	Slot      int       `json:"slot"`
 	Timestamp time.Time `json:"timestamp"`
+}
+
+//Struct fo BTC
+type BTCAddressInfo struct {
+	Txs []BTCTransaction `json:"txs"`
+}
+type BTCTransaction struct {
+	Hash        string      `json:"hash"`
+	Time        int64       `json:"time"`
+	BlockHeight int         `json:"block_height"`
+	DoubleSpend bool        `json:"double_spend"`
+	Inputs      []BTCInput  `json:"inputs"`
+	Out         []BTCOutput `json:"out"`
+}
+
+type BTCInput struct {
+	Addr    string  `json:"addr"`
+	PrevOut PrevOut `json:"prev_out"`
+}
+type PrevOut struct {
+	Addr string `json:"addr"`
+}
+
+type BTCOutput struct {
+	Value int    `json:"value"`
+	Addr  string `json:"addr"`
 }

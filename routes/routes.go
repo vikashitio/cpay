@@ -151,4 +151,5 @@ func InitRoutes(app *fiber.App) {
 	app.Get("/verify-2fa", handlers.VerifyTwoFA)
 	app.Get("/disable-2fa", handlers.DeactivateTwoFA)
 	app.Post("/activate-2fa-submit", handlers.VerifyTwoFAPost)
+	app.Get("/test", handlers.TestCode)
 }

@@ -256,14 +256,18 @@ type CreateVaultAccountResponse struct {
 }
 
 // for manage Profile
-type Profile struct {
-	Client_id    uint `gorm:"primaryKey"`
-	Gender       string
-	BirthDate    string
-	CountryCode  string
-	Mobile       string
-	AddressLine1 string
-	AddressLine2 string
+type ProfileData struct {
+	Client_id    uint   `gorm:"primaryKey"`
+	Gender       string `json:"gender"`
+	BirthDate    string `json:"birth_date"`
+	CountryCode  string `json:"country_code"`
+	Mobile       string `json:"mobile"`
+	City         string `json:"city"`
+	State        string `json:"state"`
+	Country      string `json:"country"`
+	AddressLine1 string `json:"address_line1"`
+	AddressLine2 string `json:"address_line2"`
+	Pincode      string `json:"pincode"`
 }
 
 type Alert struct {

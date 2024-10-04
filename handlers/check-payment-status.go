@@ -104,7 +104,7 @@ func FetchPaymentStatus(c *fiber.Ctx) error {
 
 		// URL of the external site to fetch JSON from
 		url := "https://apilist.tronscanapi.com/api/token_trc20/transfers-with-status?limit=1&start=0&trc20Id=" + tokenData.TokenId + "&address=" + status_address
-		fmt.Println("Path :- ", url)
+		//fmt.Println("Path :- ", url)
 
 		//////////////////////////////////////
 		resp, err := http.Get(url)
@@ -126,7 +126,7 @@ func FetchPaymentStatus(c *fiber.Ctx) error {
 		if err != nil {
 			return c.Status(http.StatusInternalServerError).SendString("Failed to parse JSON")
 		}
-		fmt.Println(" Data :", responseD)
+		//fmt.Println(" Data :", responseD)
 		if len(responseD.Data) == 0 {
 			response := StatusResponse{
 				Hashcode:       "",
@@ -194,7 +194,7 @@ func FetchPaymentStatus(c *fiber.Ctx) error {
 			fmt.Println("Failed to parse JSON")
 		}
 
-		fmt.Println("responseD => ", responseD)
+		//fmt.Println("responseD => ", responseD)
 
 		// Check if data not found
 		if responseD.Status == "0" {
@@ -256,7 +256,7 @@ func FetchPaymentStatus(c *fiber.Ctx) error {
 		// Construct the API URL
 		url := "https://api.cardanoscan.io/api/v1/transaction/list?address=" + tokenData.TokenId + "&pageNo=1&limit=1&order=desc"
 		apiKey := os.Getenv("CARDANO_SCAN_API_KEY")
-		fmt.Print(url, apiKey)
+		//fmt.Print(url, apiKey)
 		// Create a new HTTP request
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
@@ -284,7 +284,7 @@ func FetchPaymentStatus(c *fiber.Ctx) error {
 		if err != nil {
 			fmt.Println("Failed to parse JSON")
 		}
-		fmt.Println(" Data :", responseD)
+		//fmt.Println(" Data :", responseD)
 
 		if len(responseD.Data) == 0 {
 			response := StatusResponse{
@@ -312,6 +312,91 @@ func FetchPaymentStatus(c *fiber.Ctx) error {
 
 		//fetchTimestamp = "2024-06-19 16:00:09"
 		fetchTimestamp = coinAddress.Lastupdate.Format("2006-01-02 15:04:05")
+	} else if status_coinid == "12" { // For BTC Mainnet
+		// URL of the external site to fetch JSON from
+		url := "https://blockchain.info/rawaddr/" + status_address + "?limit=1"
+		//fmt.Println("URL => ", url)
+		//////////////////////////////////////
+		resp, err := http.Get(url)
+		if err != nil {
+			return c.Status(http.StatusInternalServerError).SendString("Failed to fetch data")
+		}
+		defer resp.Body.Close()
+
+		// Reading the response body
+		body, err = ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return c.Status(http.StatusInternalServerError).SendString("Failed to read response body")
+		}
+		//fmt.Println("body => ", string(body))
+		// Initialize the Response struct
+		var responseD models.BTCAddressInfo
+
+		// Unmarshal the byte data into the struct
+		err = json.Unmarshal(body, &responseD)
+		if err != nil {
+			//return c.Status(http.StatusInternalServerError).SendString("Failed to parse JSON")
+			fmt.Println("Failed to parse JSON")
+		}
+
+		//fmt.Println("responseD => ", responseD)
+
+		//fmt.Println(" Data :", responseD)
+		if len(responseD.Txs) == 0 {
+			response := StatusResponse{
+				Hashcode:       "",
+				Payment_status: "",
+				Payment_id:     "",
+			}
+			return c.JSON(response)
+		}
+
+		//###################
+
+		// fmt.Println("Hash => ", responseD.Txs[0].Hash)
+		// fmt.Println("Time => ", responseD.Txs[0].Time)
+		// fmt.Println("BlockHeight => ", responseD.Txs[0].BlockHeight)
+		// fmt.Println("DoubleSpend => ", responseD.Txs[0].DoubleSpend)
+		// fmt.Println("From => ", responseD.Txs[0].Inputs[0].PrevOut.Addr)
+		// fmt.Println("To => ", responseD.Txs[0].Out[0].Addr)
+		// fmt.Println("Amount => ", responseD.Txs[0].Out[0].Value)
+		// Check Status
+		BlockHeight := responseD.Txs[0].BlockHeight
+		DoubleSpend := responseD.Txs[0].DoubleSpend
+
+		if !DoubleSpend && BlockHeight > 0 {
+			//fmt.Println("Final Status SUCCESS")
+			receivedFinalResult = "SUCCESS"
+		} else {
+			//fmt.Println("Final Status FAILED")
+			receivedFinalResult = "FAILED"
+		}
+
+		//  Fetch Received Amount //
+		receivedAmt := responseD.Txs[0].Out[0].Value
+		// Convert the integer to a float64 with 18 decimal places
+		AmountInFloat := float64(receivedAmt) / 100000000
+		// Format the float to 6 decimal places as a string
+		formattedResult := strconv.FormatFloat(AmountInFloat, 'f', 6, 64)
+		// convert string to float value
+		receivedAmountNew, err = strconv.ParseFloat(formattedResult, 64)
+		if err != nil {
+			fmt.Println(" Error convert string to float value :")
+		}
+		// End Fetch Received Amount //
+		receivedFrom = responseD.Txs[0].Inputs[0].PrevOut.Addr // Get Address From
+		receivedTo = responseD.Txs[0].Out[0].Addr              // Get Address To
+		receivedHash = responseD.Txs[0].Hash                   // Get Hash Code
+
+		fetchTimestamp = "2024-09-26 16:00:09"
+		//fetchTimestamp = coinAddress.Lastupdate.Format("2006-01-02 15:04:05")
+		// Convert the timestamp to a Time object
+		t := time.Unix(responseD.Txs[0].Time, 0)
+		// Format the time to "2006-01-02 15:04:05"
+		responseTimestamp = t.Format("2006-01-02 15:04:05")
+		// Print the formatted time
+		//fmt.Println("responseTimestamp ", responseTimestamp)
+
 	} else {
 		fmt.Println("Crypto Not Supported ==> ", status_coin)
 	}
@@ -323,16 +408,18 @@ func FetchPaymentStatus(c *fiber.Ctx) error {
 	// Parse the dateTime strings to time.Time objects
 	dateTime1, err := time.Parse(layout, fetchTimestamp)
 	if err != nil {
+		fmt.Println("Error parsing dateTime1:")
 		return c.Status(400).SendString("Error parsing dateTime1: " + err.Error())
 	}
-
+	//fmt.Println("responseTimestamp => ", responseTimestamp)
 	dateTime2, err := time.Parse(layout, responseTimestamp)
 	if err != nil {
+		fmt.Println("Error parsing dateTime2:")
 		return c.Status(400).SendString("Error parsing dateTime2: " + err.Error())
 	}
 
-	// fmt.Print("fetchTimestamp", fetchTimestamp)
-	// fmt.Print("responseTimestamp", responseTimestamp)
+	fmt.Print("fetchTimestamp", fetchTimestamp)
+	fmt.Print("responseTimestamp", responseTimestamp)
 
 	duration := dateTime2.Sub(dateTime1)
 
@@ -368,11 +455,11 @@ func FetchPaymentStatus(c *fiber.Ctx) error {
 		fmt.Println("Payment DISPUTE")
 	}
 
-	// fmt.Println("invoiceAmount => ", invoiceAmount)
-	// fmt.Println("receivedAmount => ", receivedAmount)
-	// fmt.Println("Status => ", receivedFinalResult)
-	// fmt.Println("SubStatus => ", receivedSubStatus)
-	// fmt.Println("seconds => ", seconds)
+	//fmt.Println("invoiceAmount => ", invoiceAmount)
+	//fmt.Println("receivedAmount => ", receivedAmount)
+	//fmt.Println("Status => ", receivedFinalResult)
+	//fmt.Println("SubStatus => ", receivedSubStatus)
+	//fmt.Println("seconds => ", seconds)
 
 	if seconds > 5 {
 		//fmt.Println("Success Transaction")

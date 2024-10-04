@@ -951,7 +951,7 @@ func ProfileView(c *fiber.Ctx) error {
 		panic(err)
 	}
 
-	profile := []models.Profile{}
+	profile := []models.ProfileData{}
 	database.DB.Db.Table("client_details").Where("client_id = ?", LoginMerchantID).Find(&profile)
 
 	return c.Render("profile", fiber.Map{
@@ -972,13 +972,17 @@ func ProfilePost(c *fiber.Ctx) error {
 	getMobile := c.FormValue("mobile")
 	getAddressLine1 := c.FormValue("address_line1")
 	getAddressLine2 := c.FormValue("address_line2")
-	fmt.Println("LoginMerchantID $$$$$$$$$$$")
+	getCity := c.FormValue("city")
+	getState := c.FormValue("state")
+	getCountry := c.FormValue("country")
+	getPincode := c.FormValue("pincode")
+	//fmt.Println("LoginMerchantID $$$$$$$$$$$")
 	s, _ := store.Get(c)
 	LoginMerchantID := s.Get("LoginMerchantID").(uint)
 
-	fmt.Println("LoginMerchantID =>>>>>>>>", LoginMerchantID)
+	//fmt.Println("LoginMerchantID =>>>>>>>>", LoginMerchantID)
 
-	result := database.DB.Db.Table("client_details").Save(&models.Profile{Client_id: LoginMerchantID, Gender: getGender, BirthDate: getBirthDate, CountryCode: getCountryCode, Mobile: getMobile, AddressLine1: getAddressLine1, AddressLine2: getAddressLine2})
+	result := database.DB.Db.Table("client_details").Save(&models.ProfileData{Client_id: LoginMerchantID, Gender: getGender, BirthDate: getBirthDate, CountryCode: getCountryCode, Mobile: getMobile, AddressLine1: getAddressLine1, AddressLine2: getAddressLine2, City: getCity, State: getState, Country: getCountry, Pincode: getPincode})
 
 	Alerts := "Profile Updated successfully"
 	if result.Error != nil {
