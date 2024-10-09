@@ -1,21 +1,23 @@
-# Use Golang version 1.22.3 as the base image
-FROM golang:1.22.2-alpine
+# Start with an official Golang base image
+FROM golang:1.22.3
 
-# Set the working directory inside the container
+# Set the Current Working Directory inside the container
 WORKDIR /app
 
-# Copy the Go module files and download dependencies
+# Copy go.mod and go.sum files first to leverage Docker cache
 COPY go.mod go.sum ./
+
+# Download the Go modules needed
 RUN go mod download
 
-# Copy the rest of the application source code
-COPY . /app
+# Copy the rest of the application code
+COPY . .
 
-# Build the Go application and create an executable named 'main'
-RUN go build /app
+# Build the Go app
+RUN go build -o main .
 
-# Expose the port that the application will listen on
-EXPOSE 3000
+# Expose the application port (modify according to your app)
+EXPOSE 8080
 
-# Command to run the application
-CMD ["./template"]
+# Command to run the executable
+CMD ["./main"]
