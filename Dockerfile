@@ -9,13 +9,13 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 # Copy the rest of the application source code
-COPY . .
+COPY . /app
 
 # Build the Go application and create an executable named 'main'
-RUN go build -o main .
+RUN go build /app
 
 # Expose the port that the application will listen on
-EXPOSE 8080
+EXPOSE 3000
 
 # Command to run the application
-CMD ["./main"]
+CMD ["./template"]
